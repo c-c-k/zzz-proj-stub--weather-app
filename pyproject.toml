@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "Weather App"
+version = "0.1.0"
+description = "minimal implementation of the hyperskill Weather App project"
+authors = ["c-c-k <c-c-k@nym.hush.com>"]
+license = "MIT"
+readme = "README.rst"
+repository = "https://github.com/c-c-k/weather-app"
+# packages = [{include = "<PROJECT DIR>"}] # memo also replace in coverage
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Flask = "^2.2.3"
+python-dotenv = "^1.0.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+flake8 = "^6.0.0"
+mypy = "^1.2.0"
+pylint = "^2.17.2"
+
+[tool.poetry.group.test.dependencies]
+coverage = "^7.2.3"
+pytest = "^7.3.1"
+
+[tool.poetry.group.docs.dependencies]
+Sphinx = "^6.1.3"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+# source = ["<PROJECT DIR>"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
