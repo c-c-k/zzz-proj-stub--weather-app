@@ -29,7 +29,7 @@
   {% for card in weather_data %}
     <div class="card {{ card['day_part'] }}">
         <div class="delete-wrapper">
-            <form action="#" method="POST">
+            <form action="{{ url_for('delete', city_id=card['city_id']) }}" method="POST">
                 <input type="hidden" name="id" value="">
                 <button class="delete-button" type="submit">&#10006;</button>
             </form>
@@ -37,7 +37,7 @@
         <div class="degrees"><span>{{ card['degrees'] }}<span class="celsius"> °C</span></span></div>
         <div class="state">{{ card['state'] }}</div>
         <div class="empty"></div>
-        <div class="city">{{ card['city'] }}</div>
+        <div class="city">{{ card['city_name'] }}</div>
     </div>
   {% endfor %}
 </div>
