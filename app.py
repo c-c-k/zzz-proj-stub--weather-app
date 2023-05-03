@@ -1,20 +1,30 @@
 from datetime import datetime
+from pathlib import Path
 import sys
 
 from flask import Flask, render_template, request, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
 import requests
 
-app = Flask(__name__)
-app.config.from_prefixed_env()
+path_database = Path(__file__).parent.joinpath('weather.db')
+db = SQLAlchemy()
 
-weather_data = [
-    {"degrees": 9, "state": "Chilly",
-     "city": "BOSTON", "day_part": "night"},
-    {"degrees": 32, "state": "Sunny",
-     "city": "NEW YORK", "day_part": "day"},
-    {"degrees": -15, "state": "Cold",
-     "city": "EDMONTON", "day_part": "evening-morning"},
-]
+app = Flask(__name__)
+
+app.config.from_prefixed_env()
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{path_database.as_posix()}"
+
+path_database.unlink(missing_ok=True)
+db.init_app(app)
+
+
+class City(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, unique=True, nullable=False)
+
+
+with app.app_context():
+    db.create_all()
 
 
 def _day_part(timestamp: int):
@@ -60,14 +70,20 @@ def _get_city_weather_hstests_override(city: str):
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    global weather_data
     if request.method == 'POST':
-        city = request.form['city_name']
-        if app.config.get('OPEN_WEATHER_MAP_API_KEY', False):
-            weather_data.append(_get_city_weather(city))
-        else:
-            weather_data.append(_get_city_weather_hstests_override(city))
+        city = City(
+            name=request.form["city_name"]
+        )
+        db.session.add(city)
+        db.session.commit()
         return redirect(url_for('index'))
+    weather_data = []
+    cities = db.session.execute(db.select(City)).scalars()
+    for city in cities:
+        if app.config.get('OPEN_WEATHER_MAP_API_KEY', False):
+            weather_data.append(_get_city_weather(city.name))
+        else:
+            weather_data.append(_get_city_weather_hstests_override(city.name))
     return render_template('index.html', weather_data=weather_data)
 
 
