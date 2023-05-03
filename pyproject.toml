@@ -12,6 +12,7 @@ repository = "https://github.com/c-c-k/weather-app"
 python = "^3.10"
 Flask = "^2.2.3"
 python-dotenv = "^1.0.0"
+requests = "^2.29.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"
