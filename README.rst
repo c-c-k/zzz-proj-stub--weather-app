@@ -1,6 +1,6 @@
 Weather App
 ===========
 
-A minimal implementation of the [HyperSkill Weather App project].
+A minimal implementation of the `HyperSkill Weather App project`_.
 
-[HyperSkill Weather App project]: https://hyperskill.org/projects/164
+.. _HyperSkill Weather App project: https://hyperskill.org/projects/164
